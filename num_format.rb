@@ -9,7 +9,7 @@ import javax.swing.JTextField
 
 import java.awt.GridLayout
 
-class NumFormat < JFrame
+class NumberConverter < JFrame
 
 	def initialize
 		super('Number Format Converter')
@@ -73,4 +73,4 @@ class NumFormat < JFrame
 
 end
 
-nf = NumFormat.new
+num_conv = NumberConverter.new
