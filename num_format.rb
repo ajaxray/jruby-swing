@@ -10,7 +10,7 @@ import javax.swing.JTextField
 import java.awt.GridLayout
 
 class NumberConverter < JFrame
-  NUM_FORMATS = {"Decimal" => 10, "Binary" => 2, "HexaDecimal" => 16, "Octal" => 8}
+  NUM_FORMATS = {10 => "Decimal", 2 => "Binary", 16 => "HexaDecimal", 8 => "Octal"}
 
   def initialize
     super('Number Format Converter')
@@ -32,16 +32,17 @@ class NumberConverter < JFrame
 
     main.add(btn = JButton.new("CONVERT"))
     btn.add_action_listener do
-      format_from = cmbFrom.get_selected_item.to_s
-      format_to = cmbTo.get_selected_item.to_s
+      format_from = cmbFrom.get_selected_item.value
+      format_to = cmbTo.get_selected_item.value
       number = input.get_text
 
       result.set_text(convert(format_from, format_to, number))
     end
 
-    NUM_FORMATS.keys.each do |format|
-      cmbFrom.add_item format
-      cmbTo.add_item format
+    NUM_FORMATS.each_pair do |key, value|
+      [cmbFrom, cmbTo].each do |combo|
+        combo.add_item(ComboItem.new(key, value))
+      end
     end
 
     get_content_pane().add("Center", main)
@@ -53,15 +54,26 @@ class NumberConverter < JFrame
   end
 
   def convert(format_from, format_to, number)
-    radix = NUM_FORMATS[format_from]
-
     #Convert input to an int
-    number = number.to_i(radix)
+    number = number.to_i(format_from)
 
     #Convert the int to specified format
-    number.to_s(NUM_FORMATS[format_to]).upcase
+    number.to_s(format_to).upcase
   end
 
+end
+
+class ComboItem
+  attr_reader :value, :text
+
+  def initialize(value, text)
+    @value = value
+    @text = text
+  end
+
+  def to_s
+    @text
+  end
 end
 
 NumberConverter.new
