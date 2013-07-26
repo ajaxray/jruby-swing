@@ -35,9 +35,11 @@ class NumberConverter < JFrame
       result.set_text(convert.upcase);
     end
 
-    num_formats = ["Decimal", "Binary", "HexaDecimal", "Octal"]
-    num_formats.each{|format| @cmbFrom.add_item format}
-    num_formats.each{|format| @cmbTo.add_item format}
+    @num_formats = {"Decimal" => 10, "Binary" => 2, "HexaDecimal" => 16, "Octal" => 8}
+    @num_formats.keys.each do |format|
+      @cmbFrom.add_item format
+      @cmbTo.add_item format
+    end
 
     get_content_pane().add("Center", main);
     get_content_pane().add("South", JLabel.new("<html><br /><p style=\"color: red; font-size:8px\">Don't use fractions</p></html>", JLabel::CENTER));
@@ -48,27 +50,15 @@ class NumberConverter < JFrame
   end
 
   def convert
-    radix = 10
-
-    #Get the radix of input
-    case @cmbFrom.get_selected_item.to_s
-      when "Binary";       radix = 2
-      when "HexaDecimal"; radix = 16
-      when "Octal";     radix = 8   
-    end
+    format_from = @cmbFrom.get_selected_item.to_s
+    radix = @num_formats[format_from]
 
     #Convert input to an int
     num = @input.get_text.to_i(radix);
 
     #Convert the int to specified format
-    case @cmbTo.get_selected_item.to_s
-      when "Decimal";     output = num.to_s
-      when "Binary";      output = num.to_s(2)
-      when "HexaDecimal"; output = num.to_s(16)
-      when "Octal";       output = num.to_s(8)
-    end
-
-    output;
+    format_to = @cmbTo.get_selected_item.to_s
+    num.to_s(@num_formats[format_to])
   end
 
 end
